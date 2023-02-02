@@ -1,0 +1,23 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: $HOST
+  namespace: $NS
+spec:
+  secretName: tls-$HOST
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+  commonName: $HOST
+  dnsNames:
+  - $HOST
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - $HOST
+    - http01:
+        ingress: ingress-svc
+      domains:
+      - $HOST
