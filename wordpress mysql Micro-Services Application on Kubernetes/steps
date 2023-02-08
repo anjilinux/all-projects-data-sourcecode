@@ -1,0 +1,17 @@
+kubectl create secret generic mysql-pass --from-literal=password=12345$
+  kubectl get secrets
+
+MYSQL:
+
+   1.Create mysql service
+   2.create PVC 
+   3.create the mysql deployment
+
+WORDPRESS:
+
+   1.Create wordpress service
+   2.create PVC 
+   3.create the wordpress deployment
+
+
+
