@@ -1,0 +1,26 @@
+{% extends 'same.html' %} 
+{% block content %}
+<h1>{% block title %} Register Here{ % endblock %}</h1>
+
+<from action="/newuser" method="post">
+    <table>
+        <tr>
+            <td><input type="text" name="username" placeholder="Enter Your Name"></td>
+        </tr>
+    
+        <tr>
+            <td> <input type=" password" name="password" placeholder="Enter Your Password"> </td>  
+         </tr>   
+        
+        <tr>
+            <td> <input type="email" name="email" placeholder="Enter Your Email" >  </td>
+        </tr>    
+    
+       <tr>
+          <td> <input type="text" name="location" placeholder="Enter Your Location"></td>  
+      </tr>
+
+       
+    </table>
+</from>        
+{% endblock %}
