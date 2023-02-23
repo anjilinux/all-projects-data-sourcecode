@@ -1,0 +1,70 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: luxxy-covid-testing-system
+spec:
+  ports:
+  - port: 8000
+  selector:
+    app: luxxy-covid-testing-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: luxxy-covid-testing-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: luxxy-covid-testing-system
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5 
+  template:
+    metadata:
+      labels:
+        app: luxxy-covid-testing-system
+    spec:
+      containers:
+      - name: luxxy-covid-testing-system
+        image: thecloudbootcamp/luxxy-covid-testing-system-app-en:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: AWS_BUCKET
+          value: "luxxy-covid-testing-system-pdf-pt-rfgq"
+        - name: S3_ACCESS_KEY
+          value: "AKIAWI3MQW6IZFQDJAMR"
+        - name: S3_SECRET_ACCESS_KEY
+          value: "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"
+        - name: DB_HOST_NAME
+          value: "luxxy.c7d3gbetv6s5.us-east-1.rds.amazonaws.com"
+        - name: DB_USER
+          value: "app"
+        - name: DB_PASSWORD
+          value: "welcome123456"
+        - name: DB_NAME
+          value: "dbcovidtesting"
+        - name: DB_PORT
+          value: "3306"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: luxxy-covid-testing-system
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
+  selector:
+    app: luxxy-covid-testing-system
