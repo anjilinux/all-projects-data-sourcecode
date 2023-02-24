@@ -1,0 +1,65 @@
+https://www.youtube.com/watch?v=joSCz1HTyh8
+How To Create An Nginx Ingress Controller With Aws Classic Load Balancer
+https://awswithatiq.com/how-to-create-an-nginx-ingress-controller-with-aws-classic-load-balancer/
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app
+  labels:
+    app: test-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      containers:
+      - name: test-app
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: atiq-service  
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+  selector:
+    app: test-app
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: 'nginx'
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /atiq(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: atiq-service
+            port:
+              number: 80
