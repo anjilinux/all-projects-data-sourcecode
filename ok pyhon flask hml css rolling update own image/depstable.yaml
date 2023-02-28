@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+   name: flask-html
+   labels:
+      name: flask-html
+spec:
+  replicas: 4
+  revisionHistoryLimit: 2
+  minReadySeconds: 5
+  progressDeadlineSeconds: 60
+  selector: 
+    matchLabels:
+       app: flask-html
+  strategy: 
+     type: RollingUpdate
+     rollingUpdate: 
+        maxSurge: 2
+        maxUnavailable: 1
+  template:
+     metadata:
+        labels:
+          app: flask-html         
+     spec: 
+       containers:
+         - name: flask-html
+           image: anjireddy3993/flask-html:1.0
+           ports:
+             - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: flask-html
+spec:
+  selector: 
+    app: flask-html
+  ports:
+    - port: 80
+      targetPort: 5000
+  type: NodePort        
+
+
