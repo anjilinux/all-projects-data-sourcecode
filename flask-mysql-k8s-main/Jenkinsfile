@@ -1,0 +1,30 @@
+pipeline {
+  agent {
+    kubernetes {
+      yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: podman
+    image: quay.io/podman/stable
+    command:
+    - cat
+    tty: true
+    securityContext:
+      privileged: false
+      runAsUser: 0
+"""
+   }}
+   stages {
+      stage('Build') {
+         steps {
+            container('podman') {
+              sh '''
+                  podman info
+              '''
+            }
+         }
+      }
+   }
+}
